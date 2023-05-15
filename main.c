@@ -15,11 +15,7 @@
 #include "Button.h"
 #include "Motor.h"
 
-//**************************************************************************//
-//																																					//
-// 													Declarations																		//
-//																																					//
-//**************************************************************************//
+                                            // Declarations //
 
 // Declares Queues, Semaphores, and Mutexes
 
@@ -35,11 +31,7 @@ SemaphoreHandle_t Jam_Semaphore;
 
 SemaphoreHandle_t TheMutex;
 
-//**************************************************************************//
-//																																					//
-// 												Interrupt Service Routines												//
-//																																					//
-//**************************************************************************//
+                                     // Interrupt Service Routines //
 
 // ISR
 void GPIOE_Handler(void)
@@ -166,19 +158,13 @@ void GPIOC_Handler()
 		{
 			int Value_Jam = 1;
 			xQueueOverwriteFromISR(Jam_Flag_Q, &Value_Jam, &xHigherPriorityTaskWoken);
-
 			xSemaphoreGiveFromISR(Jam_Semaphore, &xHigherPriorityTaskWoken);
 			portEND_SWITCHING_ISR(xHigherPriorityTaskWoken);
 		}
 	}
 }
 
-//**************************************************************************//
-//																																					//
-// 																Tasks																			//
-//																																					//
-//**************************************************************************//
-
+                                                         // TASKS //
 
   // This initialises the queues used in the system.
 void Queue_Init(void *params)
@@ -488,6 +474,11 @@ int main()
 	// Initialise motor
 	Motor_Init();
 	
+		// Initialise push buttons
+	PushButton_Init();
+	GPIOIntRegister(GPIOD_BASE, GPIOD_Handler);
+	IntPrioritySet(INT_GPIOD, 0xE0);
+	
 	// Initialise limit switches
 	Limit_Init();
 	GPIOIntRegister(GPIOE_BASE, GPIOE_Handler);
@@ -498,11 +489,6 @@ int main()
 	GPIOIntRegister(GPIOC_BASE, GPIOC_Handler);
 	IntPrioritySet(INT_GPIOC, 0xA0);
 	
-	// Initialise push buttons
-	PushButton_Init();
-	GPIOIntRegister(GPIOD_BASE, GPIOD_Handler);
-	IntPrioritySet(INT_GPIOD, 0xE0);
-
   // Create tasks with specified parameters
 	xTaskCreate(Queue_Init, "Q_I", 240, NULL, 4, NULL);
 	xTaskCreate(Jamming, "J", 240, NULL, 4, NULL);
