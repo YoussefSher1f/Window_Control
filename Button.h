@@ -7,7 +7,7 @@
 #include "driverlib/sysctl.h"
 
 void PushButton_Init(void);
-void JamLock_Init();
 void Limit_Init();
+void JamLock_Init();
 
 #endif
