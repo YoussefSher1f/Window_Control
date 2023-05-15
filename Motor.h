@@ -11,8 +11,8 @@
 #define MOTOR_STOP        2
 
 void Motor_Init(void);
-void Motor_Rotate(uint8_t direction);
 void Motor_Stop(void);
+void Motor_Rotate(uint8_t direction);
 uint8_t get_state();
 void TheDelay(int ms);
 
